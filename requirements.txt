@@ -6,3 +6,4 @@ seaborn
 reportlab
 jinja2
 kaggle
+imblearn
