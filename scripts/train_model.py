@@ -39,7 +39,12 @@ model = RandomForestClassifier(
 )
 model.fit(X_train, y_train)
 
-output_path = os.path.abspath('./models/random_forest_model.pkl')
+# Use a workspace directory instead
+output_directory = './workspace/models'
+os.makedirs(output_directory, exist_ok=True)
+
+# Save the model
+output_path = os.path.join(output_directory, 'random_forest_model.pkl')
 joblib.dump(model, output_path)
 
 # Evaluate on test data
