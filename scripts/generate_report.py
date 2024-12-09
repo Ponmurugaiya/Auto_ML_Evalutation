@@ -5,7 +5,7 @@ from reportlab.pdfgen import canvas
 def generate_pdf_report():
     # Use the workspace directory
     workspace_base = os.getenv('WORKSPACE', os.getcwd())
-    reports_dir = os.path.join(workspace_base, 'reports')
+    reports_dir = os.path.join(workspace_base, 'workspace/reports')
     os.makedirs(reports_dir, exist_ok=True)
 
     # PDF and image paths
