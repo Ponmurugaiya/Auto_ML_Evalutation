@@ -65,4 +65,7 @@ metrics = {
 }
 
 # Generate the report
-generate_html_report(metrics, output_file="output/model_training_report.html")
+output_dir = './output'
+os.makedirs(output_dir, exist_ok=True)
+output_file = os.path.join(output_dir, 'model_training_report.html')
+generate_html_report(metrics, output_file)
