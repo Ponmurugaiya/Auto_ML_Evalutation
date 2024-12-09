@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    checkout([$class: 'GitSCM', 
+          branches: [[name: '*/main']], 
+          userRemoteConfigs: [[url: 'https://github.com/Ponmurugaiya/Auto_ML_Evalutation.git', 
+                               credentialsId: 'GitHub_credentials']]])
+
     stages {
         stage('Clone Repository') {
             steps {
