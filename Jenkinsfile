@@ -10,8 +10,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                // Clone the GitHub repository
-                git branch: '*/main', credentialsId: 'github-pat', url: 'https://github.com/your-username/AutoML_Evaluation.git'
+                git credentialsId: 'github-pat', url: 'https://github.com/Ponmurugaiya/Auto_ML_Evalutation.git', branch: 'main'
             }
         }
 
