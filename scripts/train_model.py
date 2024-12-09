@@ -6,7 +6,7 @@ from sklearn.metrics import classification_report, accuracy_score, precision_sco
 import joblib
 from datetime import datetime
 from report_generator import generate_html_report
-
+import os
 # Load dataset
 df = pd.read_csv('./datasets/creditcard.csv')
 
@@ -39,9 +39,8 @@ model = RandomForestClassifier(
 )
 model.fit(X_train, y_train)
 
-
-# Save model
-joblib.dump(model, './models/random_forest_model.pkl')
+output_path = os.path.abspath('./models/random_forest_model.pkl')
+joblib.dump(model, output_path)
 
 # Evaluate on test data
 y_pred = model.predict(X_test)
