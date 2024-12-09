@@ -1,8 +1,0 @@
-pandas
-numpy
-scikit-learn
-matplotlib
-seaborn
-reportlab
-jinja2
-kaggle
