@@ -16,6 +16,6 @@ def generate_html_report(metrics, output_file):
 
     # Generate the report
     with open(output_file, 'w') as report_file:
-        report_file.write("<html><body><h1>Model Training Report</h1></body></html>")
+        report_file.write(html_content)
 
     print(f"Report generated: {output_file}")

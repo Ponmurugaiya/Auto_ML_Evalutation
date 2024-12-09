@@ -69,7 +69,7 @@ metrics = {
 }
 
 # Generate the report
-output_dir = os.path.join(workspace_base, 'output')
+output_dir = os.path.join(workspace_base, 'workspace/output')
 os.makedirs(output_dir, exist_ok=True)
 output_file = os.path.join(output_dir, 'model_training_report.html')
 generate_html_report(metrics, output_file)
