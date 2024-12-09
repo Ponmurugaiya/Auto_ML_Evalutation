@@ -1,7 +1,7 @@
 import os
 from jinja2 import Environment, FileSystemLoader
 
-def generate_html_report(metrics, output_file="report.html"):
+def generate_html_report(metrics, output_file):
     # Load Jinja2 template
     env = Environment(loader=FileSystemLoader('templates'))
     template = env.get_template('report_template.html')
