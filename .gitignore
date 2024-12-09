@@ -162,4 +162,5 @@ cython_debug/
 #.idea/
 
 #datasets
-datasets
+datasets/creditcardfraud_resampled.csv
+datasets/creditcard.csv
