@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image
-                    sh 'docker build -t fraud-detection .'
+                    bat 'docker build -t fraud-detection .'
                 }
             }
         }
@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     // Run the Docker container for evaluation
-                    sh 'docker run -v $(pwd)/reports:/app/reports fraud-detection'
+                    bat 'docker run -v $(pwd)/reports:/app/reports fraud-detection'
                 }
             }
         }
