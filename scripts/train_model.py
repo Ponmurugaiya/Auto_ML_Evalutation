@@ -7,6 +7,7 @@ import joblib
 from datetime import datetime
 from report_generator import generate_html_report
 import os
+
 # Load dataset
 df = pd.read_csv('./datasets/creditcard.csv')
 
@@ -39,18 +40,21 @@ model = RandomForestClassifier(
 )
 model.fit(X_train, y_train)
 
-# Use a workspace directory instead
-output_directory = './workspace/models'
+# Evaluate on test data
+y_pred = model.predict(X_test)
+print("Classification Report:")
+print(classification_report(y_test, y_pred))
+
+# Use the Jenkins workspace directory as the base path
+workspace_base = os.getenv('WORKSPACE', os.getcwd())
+
+# Define absolute paths
+output_directory = os.path.join(workspace_base, 'workspace/models')
 os.makedirs(output_directory, exist_ok=True)
 
 # Save the model
 output_path = os.path.join(output_directory, 'random_forest_model.pkl')
 joblib.dump(model, output_path)
-
-# Evaluate on test data
-y_pred = model.predict(X_test)
-print("Classification Report:")
-print(classification_report(y_test, y_pred))
 
 metrics = {
     'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -61,11 +65,14 @@ metrics = {
         'Precision': precision_score,
         'Recall': recall_score,
         'F1 Score': f1_score
-    }
+        }
 }
 
 # Generate the report
-output_dir = './output'
+output_dir = os.path.join(workspace_base, 'output')
 os.makedirs(output_dir, exist_ok=True)
 output_file = os.path.join(output_dir, 'model_training_report.html')
 generate_html_report(metrics, output_file)
+
+
+

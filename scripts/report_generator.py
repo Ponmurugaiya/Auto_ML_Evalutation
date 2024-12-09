@@ -9,12 +9,13 @@ def generate_html_report(metrics, output_file):
     # Render the template with metrics
     html_content = template.render(metrics=metrics)
 
+    # Ensure the directory exists
     output_dir = os.path.dirname(output_file)
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    os.makedirs(output_dir, exist_ok=True)
+
 
     # Generate the report
     with open(output_file, 'w') as report_file:
-        report_file.write("<html><body><h1>Model Training Report</h1></body></html>")
+        report_file.write(html_content)
 
     print(f"Report generated: {output_file}")
