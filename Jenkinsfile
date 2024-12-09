@@ -1,47 +1,86 @@
 pipeline {
     agent any
 
-    options {
-        skipDefaultCheckout() // Skip default checkout since we manually define it.
+    environment {
+        DATASET_URL = "https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud"
+        KAGGLE_USERNAME = credentials('kaggle-username')
+        KAGGLE_KEY = credentials('kaggle-key')
     }
 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout Code') {
             steps {
-                // Checkout project from Git
-                checkout([$class: 'GitSCM', 
-                          branches: [[name: '*/main']], 
-                          userRemoteConfigs: [[url: 'https://github.com/Ponmurugaiya/Auto_ML_Evalutation.git', 
-                                               credentialsId: 'GitHub_credentials']]])
+                // Clone the GitHub repository
+                git branch: 'main', url: 'https://github.com/your-username/AutoML_Evaluation.git'
             }
         }
+
         stage('Build Docker Image') {
             steps {
-                script {
-                    // Build the Docker image
-                    bat 'docker build -t fraud-detection .'
-                }
+                // Build the Docker image with necessary dependencies
+                bat 'docker build -t automl-evaluation .'
             }
         }
-        stage('Run Evaluation') {
+
+        stage('Download Dataset') {
             steps {
-                script {
-                    // Run the Docker container for evaluation
-                    bat "docker run -v %CD%\\reports:/app/reports fraud-detection"
-                }
+                // Download dataset inside the Docker container
+                bat '''
+                docker run --rm ^
+                -e KAGGLE_USERNAME=%KAGGLE_USERNAME% ^
+                -e KAGGLE_KEY=%KAGGLE_KEY% ^
+                -v "%CD%\\datasets:/app/datasets" ^
+                automl-evaluation ^
+                kaggle datasets download -d mlg-ulb/creditcardfraud --unzip -p /app/datasets
+                '''
             }
         }
-        stage('Archive Reports') {
+
+        stage('Train Model') {
             steps {
-                // Archive the generated reports
-                archiveArtifacts artifacts: 'reports/*', fingerprint: true
+                // Train the model inside the Docker container
+                bat '''
+                docker run --rm ^
+                -v "%CD%:/app" ^
+                automl-evaluation ^
+                python scripts/train_model.py
+                '''
+            }
+        }
+
+        stage('Evaluate Model') {
+            steps {
+                // Evaluate the model inside the Docker container
+                bat '''
+                docker run --rm ^
+                -v "%CD%:/app" ^
+                automl-evaluation ^
+                python scripts/evaluate_model.py
+                '''
+            }
+        }
+
+        stage('Generate Report') {
+            steps {
+                // Generate the report inside the Docker container
+                bat '''
+                docker run --rm ^
+                -v "%CD%:/app" ^
+                automl-evaluation ^
+                python scripts/generate_report.py
+                '''
             }
         }
     }
+
     post {
         always {
-            // Clean up workspace after run
-            cleanWs()
+            // Archive reports and logs
+            archiveArtifacts artifacts: '**/reports/**', allowEmptyArchive: true
+        }
+        failure {
+            // Notify on failure
+            echo 'Pipeline failed!'
         }
     }
 }
