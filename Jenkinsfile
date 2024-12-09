@@ -1,15 +1,18 @@
 pipeline {
     agent any
-    checkout([$class: 'GitSCM', 
-          branches: [[name: '*/main']], 
-          userRemoteConfigs: [[url: 'https://github.com/Ponmurugaiya/Auto_ML_Evalutation.git', 
-                               credentialsId: 'GitHub_credentials']]])
+
+    options {
+        skipDefaultCheckout() // Skip default checkout since we manually define it.
+    }
 
     stages {
         stage('Clone Repository') {
             steps {
                 // Checkout project from Git
-                checkout scm
+                checkout([$class: 'GitSCM', 
+                          branches: [[name: '*/main']], 
+                          userRemoteConfigs: [[url: 'https://github.com/Ponmurugaiya/Auto_ML_Evalutation.git', 
+                                               credentialsId: 'GitHub_credentials']]])
             }
         }
         stage('Build Docker Image') {
@@ -24,7 +27,7 @@ pipeline {
             steps {
                 script {
                     // Run the Docker container for evaluation
-                    bat 'docker run -v $(pwd)/reports:/app/reports fraud-detection'
+                    bat "docker run -v %CD%\\reports:/app/reports fraud-detection"
                 }
             }
         }
