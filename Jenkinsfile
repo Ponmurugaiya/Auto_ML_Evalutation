@@ -97,4 +97,5 @@ pipeline {
                 attachmentsPattern: 'workspace/reports/model_report.pdf'
             )
         }
+    }
 }
