@@ -82,4 +82,19 @@ pipeline {
             echo 'Pipeline failed!'
         }
     }
+
+    post {
+        always {
+            // Archive the report
+            archiveArtifacts artifacts: 'workspace/reports/model_report.pdf', allowEmptyArchive: true
+            
+            // Send email notification
+            emailext(
+                subject: "Pipeline Execution Report: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "The pipeline has completed. Please find the attached report.\n\nBuild URL: ${env.BUILD_URL}",
+                recipientProviders: [[$class: 'CulpritsRecipientProvider']],
+                to: 'ponmurugaiya1@gmail.com',
+                attachmentsPattern: 'workspace/reports/model_report.pdf'
+            )
+        }
 }
