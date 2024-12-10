@@ -8,7 +8,7 @@ def generate_html_report(metrics, output_file):
 
     # Render the template with metrics
     html_content = template.render(metrics=metrics)
-
+    
     # Ensure the directory exists
     output_dir = os.path.dirname(output_file)
     os.makedirs(output_dir, exist_ok=True)
